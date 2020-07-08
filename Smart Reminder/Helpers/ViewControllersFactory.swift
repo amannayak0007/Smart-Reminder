@@ -33,4 +33,8 @@ extension ViewControllersFactory {
         return vcWithId("\(RemindersListViewController.self)") as! RemindersListViewController
     }
     
+    static func addReminderViewController() -> AddReminderViewController {
+        return vcWithId("\(AddReminderViewController.self)") as! AddReminderViewController
+    }
+    
 }
