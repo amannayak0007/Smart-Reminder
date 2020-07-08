@@ -104,10 +104,30 @@
                     <navigationItem key="navigationItem" id="oT2-vD-FGd"/>
                     <connections>
                         <outlet property="addReminderButton" destination="Cjr-dn-T4T" id="R9Z-h8-utd"/>
+                        <outlet property="emptyReminderView" destination="sUE-3f-l3K" id="bhf-zi-7ci"/>
                         <outlet property="tableView" destination="AKm-2b-Bza" id="0HL-6w-gG1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="sUE-3f-l3K">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_reminder" translatesAutoresizingMaskIntoConstraints="NO" id="qX8-p3-AXz">
+                            <rect key="frame" x="75" y="90" width="150" height="150"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="150" id="3ih-DV-ajZ"/>
+                                <constraint firstAttribute="width" constant="150" id="Sna-yV-4Mv"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstItem="qX8-p3-AXz" firstAttribute="centerY" secondItem="sUE-3f-l3K" secondAttribute="centerY" multiplier="1.1" id="8XM-Fd-V9j"/>
+                        <constraint firstItem="qX8-p3-AXz" firstAttribute="centerX" secondItem="sUE-3f-l3K" secondAttribute="centerX" id="AGV-e9-srC"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="q8q-Kd-lGQ"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="905.79710144927549" y="137.94642857142856"/>
         </scene>
@@ -168,7 +188,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textField>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="khU-X6-L8L">
+                                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="khU-X6-L8L">
                                                             <rect key="frame" x="346" y="15.5" width="30" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="oNt-ND-hSp"/>
@@ -246,6 +266,7 @@
     </scenes>
     <resources>
         <image name="chevron.down" catalog="system" width="128" height="72"/>
+        <image name="no_reminder" width="188" height="230"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>

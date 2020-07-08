@@ -8,14 +8,23 @@
 
 import UIKit
 
+protocol AddReminderDelegate: class {
+    func reminderSaved()
+}
+
 class AddReminderViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var saveBtn: UIButton!
-    
-    var taskCategory: TaskCategory?
 
     private var datePicker = UIDatePicker()
+    private var remindersListViewModel = RemindersListViewModel()
+    
+    weak var delegate: AddReminderDelegate?
+    var taskCategory: TaskCategory?
+    
+    private var reminderTitle: String?
+    private var reminderDate: Date?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +39,9 @@ class AddReminderViewController: UIViewController {
     }
     
     @objc func saveBtnPressed() {
-        print("Save reminder")
+        remindersListViewModel.saveReminder(title: reminderTitle, dateTime: reminderDate)
+        delegate?.reminderSaved()
+        navigationController?.popViewController(animated: true)
     }
     
 }
@@ -69,11 +80,11 @@ extension AddReminderViewController: UITableViewDataSource, UITableViewDelegate 
 extension AddReminderViewController: AdddReminderCellDelegate {
     
     func selectedTask(_ task: String?) {
-        print(task)
+        reminderTitle = task
     }
     
     func selectedDate(_ date: Date?) {
-        print(date)
+        reminderDate = date
     }
     
 }

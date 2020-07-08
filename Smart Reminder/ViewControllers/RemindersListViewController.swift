@@ -12,6 +12,7 @@ class RemindersListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var addReminderButton: UIButton!
+    @IBOutlet private weak var emptyReminderView: UIView!
     
     private let sectionTitle = ["Overdue", "Upcoming"]
     private let remindersListViewModel = RemindersListViewModel()
@@ -28,9 +29,19 @@ class RemindersListViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .automatic
         tableView.tableFooterView = UIView()
         addReminderButton.addTarget(self, action: #selector(addReminderTapped), for: .touchUpInside)
+        fetchReminders()
         
-//        remindersListViewModel.saveReminder()
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchReminders), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+    }
+    
+    @objc func fetchReminders() {
         remindersListViewModel.fetchReminders {
+            if remindersListViewModel.dueReminders?.count == 0, remindersListViewModel.upcomingReminders?.count == 0 {
+                tableView.backgroundView = emptyReminderView
+            } else {
+                tableView.backgroundView = nil
+            }
             tableView.reloadData()
         }
     }
@@ -44,17 +55,29 @@ class RemindersListViewController: UIViewController {
 extension RemindersListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if remindersListViewModel.dueReminders?.count == 0, remindersListViewModel.upcomingReminders?.count == 0 {
+            return 0
+        }
         return sectionTitle.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return remindersListViewModel.reminders?.count ?? 0
+        if section == 0 {
+            return remindersListViewModel.dueReminders?.count ?? 0
+        } else {
+            return remindersListViewModel.upcomingReminders?.count ?? 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(ReminderTableViewCell.self)", for: indexPath) as! ReminderTableViewCell
-        let reminder = remindersListViewModel.reminders?[indexPath.row]
-        cell.configureCell(for: reminder)
+        if indexPath.section == 0 {
+            let reminder = remindersListViewModel.dueReminders?[indexPath.row]
+            cell.configureCell(for: reminder)
+        } else {
+            let reminder = remindersListViewModel.upcomingReminders?[indexPath.row]
+            cell.configureCell(for: reminder)
+        }
         return cell
     }
     
@@ -67,11 +90,27 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionTitle[section]
+        if section == 0 {
+            return remindersListViewModel.dueReminders?.count == 0 ? nil : sectionTitle[section]
+        } else {
+            return remindersListViewModel.upcomingReminders?.count == 0 ? nil : sectionTitle[section]
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        if section == 0 {
+            return remindersListViewModel.dueReminders?.count == 0 ? .leastNonzeroMagnitude : 40
+        } else {
+            return remindersListViewModel.upcomingReminders?.count == 0 ? .leastNonzeroMagnitude : 40
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return remindersListViewModel.dueReminders?.count == 0 ? .leastNonzeroMagnitude : 18
+        } else {
+            return remindersListViewModel.upcomingReminders?.count == 0 ? .leastNonzeroMagnitude : 18
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -80,13 +119,35 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, success) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, success) in
+            guard let self = self else {return}
             print("deleted")
+            if indexPath.section == 0 {
+                if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
+                    self.remindersListViewModel.delete(reminder: reminder)
+                }
+            } else {
+                if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
+                    self.remindersListViewModel.delete(reminder: reminder)
+                }
+            }
+            self.fetchReminders()
             success(true)
         }
         
-        let completedAction = UIContextualAction(style: .normal, title: "Completed") { (action, view, success) in
+        let completedAction = UIContextualAction(style: .normal, title: "Completed") { [weak self] (action, view, success) in
+            guard let self = self else {return}
             print("complete")
+            if indexPath.section == 0 {
+                if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
+                    self.remindersListViewModel.markAsComplete(reminder: reminder)
+                }
+            } else {
+                if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
+                    self.remindersListViewModel.markAsComplete(reminder: reminder)
+                }
+            }
+            self.fetchReminders()
             success(true)
         }
         completedAction.backgroundColor = .link
@@ -104,7 +165,7 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
             return
         }
         
-        let photoSourcePicker = UIAlertController()
+        let photoSourcePicker = UIAlertController(title: "Smart Reminder", message: "Smart reminder uses photo to create reminders. Please provide a photo to proceed.", preferredStyle: .actionSheet)
         let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { [unowned self] _ in
             self.presentPhotoPicker(sourceType: .camera)
         }
@@ -139,6 +200,7 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
                 if let taskCategory = taskCategory {
                     let vc =  ViewControllersFactory.addReminderViewController()
                     vc.taskCategory = taskCategory
+                    vc.delegate = self
                     self.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     self.setupErrorTypeAlertView(title: "Oops!", message: "We are not able to recognize this image. Please try again.")
@@ -150,4 +212,12 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
         }
     }
 
+}
+
+extension RemindersListViewController: AddReminderDelegate {
+    
+    func reminderSaved() {
+        fetchReminders()
+    }
+    
 }

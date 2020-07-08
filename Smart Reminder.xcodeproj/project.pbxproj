@@ -13,6 +13,7 @@
 		132782F524B4BBAD00792028 /* Smart_Reminder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 132782F324B4BBAD00792028 /* Smart_Reminder.xcdatamodeld */; };
 		132782F724B4BBB300792028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 132782F624B4BBB300792028 /* Assets.xcassets */; };
 		132782FA24B4BBB300792028 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 132782F824B4BBB300792028 /* LaunchScreen.storyboard */; };
+		1328646A24B650D400F1B017 /* LocalNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1328646924B650D400F1B017 /* LocalNotificationScheduler.swift */; };
 		1337FAF424B5D92D0041F467 /* AddReminderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1337FAF324B5D92D0041F467 /* AddReminderTableViewCell.swift */; };
 		1337FAF624B5E1F50041F467 /* AddReminderCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1337FAF524B5E1F50041F467 /* AddReminderCellModel.swift */; };
 		133F540024B4FFCB00DC59CB /* Reminder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133F53FE24B4FFCB00DC59CB /* Reminder+CoreDataClass.swift */; };
@@ -38,6 +39,7 @@
 		132782F624B4BBB300792028 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		132782F924B4BBB300792028 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		132782FB24B4BBB300792028 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1328646924B650D400F1B017 /* LocalNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationScheduler.swift; sourceTree = "<group>"; };
 		1337FAF324B5D92D0041F467 /* AddReminderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReminderTableViewCell.swift; sourceTree = "<group>"; };
 		1337FAF524B5E1F50041F467 /* AddReminderCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReminderCellModel.swift; sourceTree = "<group>"; };
 		133F53FE24B4FFCB00DC59CB /* Reminder+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reminder+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			children = (
 				133F540424B5028400DC59CB /* Extensions.swift */,
 				133F540E24B5055E00DC59CB /* ViewControllersFactory.swift */,
+				1328646924B650D400F1B017 /* LocalNotificationScheduler.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				133F540024B4FFCB00DC59CB /* Reminder+CoreDataClass.swift in Sources */,
 				133F540124B4FFCB00DC59CB /* Reminder+CoreDataProperties.swift in Sources */,
 				133F540D24B5052700DC59CB /* RemindersListViewModel.swift in Sources */,
+				1328646A24B650D400F1B017 /* LocalNotificationScheduler.swift in Sources */,
 				13CC3C2924B5BEB600344998 /* TasksListModel.swift in Sources */,
 				132782F524B4BBAD00792028 /* Smart_Reminder.xcdatamodeld in Sources */,
 				1337FAF424B5D92D0041F467 /* AddReminderTableViewCell.swift in Sources */,

@@ -2,7 +2,7 @@
 //  Reminder+CoreDataProperties.swift
 //  Smart Reminder
 //
-//  Created by Aman Jain on 08/07/20.
+//  Created by Aman Jain on 09/07/20.
 //  Copyright © 2020 Aman Jain. All rights reserved.
 //
 //
@@ -17,9 +17,8 @@ extension Reminder {
         return NSFetchRequest<Reminder>(entityName: "Reminder")
     }
 
-    @NSManaged public var title: String?
     @NSManaged public var dateTime: Date?
     @NSManaged public var isCompleted: Bool
-    @NSManaged public var id: UUID?
+    @NSManaged public var title: String?
 
 }

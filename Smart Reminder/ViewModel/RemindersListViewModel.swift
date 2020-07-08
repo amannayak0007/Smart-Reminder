@@ -10,37 +10,39 @@ import Foundation
 
 class RemindersListViewModel {
     
-    public var reminders: [Reminder]?
+    public var upcomingReminders: [Reminder]?
+    public var dueReminders: [Reminder]?
     
-    func saveReminder() {
+    func saveReminder(title: String?, dateTime: Date?) {
         let reminder = Reminder(context: PersistentStorage.shared.context)
-        reminder.dateTime = Date()
-        reminder.title = "Hello Steve"
-        
-        let reminder1 = Reminder(context: PersistentStorage.shared.context)
-        reminder1.dateTime = Date()
-        reminder1.title = "Hello Aman"
-        
-        let reminder2 = Reminder(context: PersistentStorage.shared.context)
-        reminder2.dateTime = Date()
-        reminder2.title = "Hello Bob"
-        
-        let reminder3 = Reminder(context: PersistentStorage.shared.context)
-        reminder3.dateTime = Date()
-        reminder3.title = "Hello Jhon"
-        
+        reminder.title = title
+        reminder.dateTime = dateTime
         PersistentStorage.shared.saveContext()
+        LocalNotificationScheduler.scheduleNotification(for: reminder)
     }
     
     func fetchReminders(completion: (() -> Void)) {
         do {
             guard let result = try PersistentStorage.shared.context.fetch(Reminder.fetchRequest()) as? [Reminder] else {return}
-            reminders = result
+            upcomingReminders = result.filter({!$0.isCompleted && !$0.dateTime!.isOverdue})
+            dueReminders = result.filter({!$0.isCompleted && $0.dateTime!.isOverdue})
             completion()
         } catch let error {
             print(error.localizedDescription)
             completion()
         }
+    }
+    
+    func delete(reminder: Reminder) {
+        PersistentStorage.shared.context.delete(reminder)
+        PersistentStorage.shared.saveContext()
+        LocalNotificationScheduler.invalidateNotification(for: reminder)
+    }
+    
+    func markAsComplete(reminder: Reminder) {
+        reminder.isCompleted = true
+        PersistentStorage.shared.saveContext()
+        LocalNotificationScheduler.invalidateNotification(for: reminder)
     }
     
 }
