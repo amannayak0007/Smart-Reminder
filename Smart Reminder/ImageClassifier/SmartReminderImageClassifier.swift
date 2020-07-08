@@ -13,7 +13,7 @@ import CoreML
 
 class SmartReminderImageClassifier {
         
-    func processClassification(for image: UIImage, completion: @escaping ((Result<[String]?, Error>) -> Void)) {
+    func processClassification(for image: UIImage, completion: @escaping ((Result<TaskCategory?, Error>) -> Void)) {
         
         let orientation = CGImagePropertyOrientation(image.imageOrientation)
         guard let ciImage = CIImage(image: image) else { fatalError("Unable to create \(CIImage.self) from \(image).") }
@@ -35,8 +35,8 @@ class SmartReminderImageClassifier {
                             if let confidenceRate = firstResult?.confidence, confidenceRate > 0.90 {
                                 let imageCategory = firstResult?.identifier ?? "Unknown"
                                 print("Image is classified as:", imageCategory, "with confidence score:", confidenceRate)
-                                let tasks = TasksList.list[imageCategory]
-                                completion(.success(tasks))
+                                let taskCategory = TaskCategory(rawValue: imageCategory)
+                                completion(.success(taskCategory))
                             } else {
                                 completion(.success(nil))
                             }

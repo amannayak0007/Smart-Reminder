@@ -96,3 +96,17 @@ extension CGImagePropertyOrientation {
         }
     }
 }
+
+extension UIToolbar {
+
+    func ToolbarPicker(target: Any?, action: Selector) -> UIToolbar {
+        let toolBar = UIToolbar()
+        toolBar.tintColor = UIColor.label
+        toolBar.sizeToFit()
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: target, action: action)
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([spaceButton, doneButton], animated: false)
+        return toolBar
+    }
+    
+}

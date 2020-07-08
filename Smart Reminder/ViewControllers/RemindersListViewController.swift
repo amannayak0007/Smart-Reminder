@@ -71,7 +71,7 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 40
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -135,11 +135,10 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
         imageClassifier.processClassification(for: image) { [weak self] (result) in
             guard let self = self else {return}
             switch result {
-            case .success(let tasks):
-                print(tasks)
-                if let tasks = tasks {
+            case .success(let taskCategory):
+                if let taskCategory = taskCategory {
                     let vc =  ViewControllersFactory.addReminderViewController()
-                    vc.tasks = tasks
+                    vc.taskCategory = taskCategory
                     self.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     self.setupErrorTypeAlertView(title: "Oops!", message: "We are not able to recognize this image. Please try again.")

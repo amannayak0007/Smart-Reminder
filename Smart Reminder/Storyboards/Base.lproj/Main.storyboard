@@ -118,13 +118,112 @@
                     <view key="view" contentMode="scaleToFill" id="JHT-KZ-0Y0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ivV-AA-bdE">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="Q9j-2c-TeV">
+                                    <rect key="frame" x="0.0" y="134" width="414" height="100"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3uo-eG-aDH">
+                                            <rect key="frame" x="25" y="20" width="364" height="60"/>
+                                            <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="60" id="NHi-Tu-GNl"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                            <state key="normal" title="Save">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="30"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="3uo-eG-aDH" firstAttribute="centerY" secondItem="Q9j-2c-TeV" secondAttribute="centerY" id="j4W-3z-dAN"/>
+                                        <constraint firstItem="3uo-eG-aDH" firstAttribute="leading" secondItem="Q9j-2c-TeV" secondAttribute="leading" constant="25" id="uWC-jR-mPi"/>
+                                        <constraint firstAttribute="trailing" secondItem="3uo-eG-aDH" secondAttribute="trailing" constant="25" id="x5m-0t-tNj"/>
+                                    </constraints>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AddReminderTableViewCell" id="ca6-RM-cMp" customClass="AddReminderTableViewCell" customModule="Smart_Reminder" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.5" width="414" height="60.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ca6-RM-cMp" id="Sdo-rD-cIM">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q4U-az-tV3">
+                                                    <rect key="frame" x="15" y="0.0" width="384" height="60.5"/>
+                                                    <subviews>
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oCx-Bu-dtT">
+                                                            <rect key="frame" x="2" y="0.0" width="380" height="60.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="60" id="Jrl-98-zyR"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                            <textInputTraits key="textInputTraits"/>
+                                                        </textField>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="khU-X6-L8L">
+                                                            <rect key="frame" x="346" y="15.5" width="30" height="30"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="30" id="oNt-ND-hSp"/>
+                                                                <constraint firstAttribute="height" constant="30" id="twg-H2-12r"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                            <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <state key="normal" image="chevron.down" catalog="system"/>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="khU-X6-L8L" secondAttribute="trailing" constant="8" id="2Nn-Cg-tv6"/>
+                                                        <constraint firstItem="khU-X6-L8L" firstAttribute="centerY" secondItem="Q4U-az-tV3" secondAttribute="centerY" id="Uxk-hK-Hvf"/>
+                                                        <constraint firstAttribute="trailing" secondItem="oCx-Bu-dtT" secondAttribute="trailing" constant="2" id="cM7-nQ-j6Y"/>
+                                                        <constraint firstItem="oCx-Bu-dtT" firstAttribute="top" secondItem="Q4U-az-tV3" secondAttribute="top" id="iX5-9b-vnt"/>
+                                                        <constraint firstAttribute="bottom" secondItem="oCx-Bu-dtT" secondAttribute="bottom" id="mCr-uS-4D7"/>
+                                                        <constraint firstItem="oCx-Bu-dtT" firstAttribute="leading" secondItem="Q4U-az-tV3" secondAttribute="leading" constant="2" id="v8T-RL-7t5"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Q4U-az-tV3" firstAttribute="top" secondItem="Sdo-rD-cIM" secondAttribute="top" id="53N-wu-370"/>
+                                                <constraint firstAttribute="bottom" secondItem="Q4U-az-tV3" secondAttribute="bottom" id="5UU-40-2q9"/>
+                                                <constraint firstAttribute="trailing" secondItem="Q4U-az-tV3" secondAttribute="trailing" constant="15" id="eP8-EU-NmG"/>
+                                                <constraint firstItem="Q4U-az-tV3" firstAttribute="leading" secondItem="Sdo-rD-cIM" secondAttribute="leading" constant="15" id="p61-Z8-n37"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="textField" destination="oCx-Bu-dtT" id="o46-PE-RM7"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="L2y-FF-pcQ" id="aT0-Zs-Z7Y"/>
+                                    <outlet property="delegate" destination="L2y-FF-pcQ" id="ieY-bY-gpy"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="ivV-AA-bdE" firstAttribute="trailing" secondItem="0LU-Sh-466" secondAttribute="trailing" id="CxW-m2-5Az"/>
+                            <constraint firstAttribute="bottom" secondItem="ivV-AA-bdE" secondAttribute="bottom" id="Dnf-Hq-ynz"/>
+                            <constraint firstItem="ivV-AA-bdE" firstAttribute="top" secondItem="JHT-KZ-0Y0" secondAttribute="top" id="l3x-MY-IRN"/>
+                            <constraint firstItem="ivV-AA-bdE" firstAttribute="leading" secondItem="0LU-Sh-466" secondAttribute="leading" id="lxh-Xe-zSq"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="0LU-Sh-466"/>
                     </view>
+                    <connections>
+                        <outlet property="saveBtn" destination="3uo-eG-aDH" id="xxc-oA-wzl"/>
+                        <outlet property="tableView" destination="ivV-AA-bdE" id="9fE-fk-pCm"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LyX-Wh-rOn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1599" y="137"/>
+            <point key="canvasLocation" x="1598.5507246376812" y="136.60714285714286"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kzb-A8-pSP">
@@ -146,6 +245,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="chevron.down" catalog="system" width="128" height="72"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>
