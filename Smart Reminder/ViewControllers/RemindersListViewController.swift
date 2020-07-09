@@ -205,19 +205,18 @@ extension RemindersListViewController {
             guard let self = self else {return}
             switch result {
             case .success(let taskCategory):
-                if let taskCategory = taskCategory {
-                    self.showAddReminderVC(taskCategory)
-                } else {
-                    self.setupErrorTypeAlertView(title: "Oops!", message: "We are not able to recognize this image. Please try again.")
-                }
+                self.showAddReminderVC(taskCategory)
+            case .failure(let error as ClassifierError):
+                print(error.localizedDescription)
+                self.setupErrorTypeAlertView(title: "Oops!", message: error.localizedDescription)
             case .failure(let error):
                 print(error.localizedDescription)
-                self.setupErrorTypeAlertView(title: "Oops!", message: "We are not able to recognize this image. Please try again.")
+                self.setupErrorTypeAlertView(title: "Oops!", message: error.localizedDescription)
             }
         }
     }
     
-    private func showAddReminderVC(_ taskCategory: TaskCategory) {
+    private func showAddReminderVC(_ taskCategory: TaskCategory?) {
         let vc =  ViewControllersFactory.addReminderViewController()
         vc.taskCategory = taskCategory
         vc.delegate = self

@@ -11,6 +11,17 @@ import UIKit
 import Vision
 import CoreML
 
+enum ClassifierError: Error {
+    case NotResultFound
+    
+    var localizedDescription: String {
+        switch self {
+        case .NotResultFound:
+            return "We are not able to recognize this image. Please try again."
+        }
+    }
+}
+
 class SmartReminderImageClassifier {
         
     func processClassification(for image: UIImage, completion: @escaping ((Result<TaskCategory?, Error>) -> Void)) {
@@ -27,19 +38,14 @@ class SmartReminderImageClassifier {
                             completion(.failure(error!))
                             return
                         }
-                        
-                        if classifications.isEmpty {
-                            completion(.success(nil))
+                        let firstResult = classifications.first
+                        if let confidenceRate = firstResult?.confidence, confidenceRate > 0.90 {
+                            let imageCategory = firstResult?.identifier ?? "Unknown"
+                            print("Image is classified as:", imageCategory, "with confidence score:", confidenceRate)
+                            let taskCategory = TaskCategory(rawValue: imageCategory)
+                            completion(.success(taskCategory))
                         } else {
-                            let firstResult = classifications.first
-                            if let confidenceRate = firstResult?.confidence, confidenceRate > 0.90 {
-                                let imageCategory = firstResult?.identifier ?? "Unknown"
-                                print("Image is classified as:", imageCategory, "with confidence score:", confidenceRate)
-                                let taskCategory = TaskCategory(rawValue: imageCategory)
-                                completion(.success(taskCategory))
-                            } else {
-                                completion(.success(nil))
-                            }
+                            completion(.failure(ClassifierError.NotResultFound))
                         }
                     }
                 })
