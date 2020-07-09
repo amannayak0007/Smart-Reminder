@@ -87,9 +87,6 @@ class RemindersListViewController: UIViewController {
 extension RemindersListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if remindersListViewModel.dueRemindersCount() == 0, remindersListViewModel.upcomingRemindersCount() == 0 {
-            return 0
-        }
         return sections.count
     }
     
@@ -155,44 +152,37 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, success) in
-            guard let self = self else {return}
-            print("deleted")
-            switch self.sections[indexPath.section] {
-            case .Overdue:
-                if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
-                    self.remindersListViewModel.delete(reminder: reminder)
-                }
-            case .Upcoming:
-                if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
-                    self.remindersListViewModel.delete(reminder: reminder)
-                }
-            }
-            self.fetchReminders()
-            success(true)
-        }
-        
+                
         let completedAction = UIContextualAction(style: .normal, title: "Completed") { [weak self] (action, view, success) in
             guard let self = self else {return}
-            print("complete")
-            switch self.sections[indexPath.section] {
-            case .Overdue:
-                if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
-                    self.remindersListViewModel.markAsComplete(reminder: reminder)
-                }
-            case .Upcoming:
-                if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
-                    self.remindersListViewModel.markAsComplete(reminder: reminder)
-                }
-            }
-            self.fetchReminders()
+            self.markReminderAsComplete(at: indexPath)
             success(true)
         }
         completedAction.backgroundColor = .link
         
-        return UISwipeActionsConfiguration(actions: [deleteAction, completedAction])
+        return UISwipeActionsConfiguration(actions: [completedAction])
     }
+    
+}
+
+// MARK: - Reminder mark as complete
+
+extension RemindersListViewController {
+    
+    private func markReminderAsComplete(at indexPath: IndexPath) {
+        switch self.sections[indexPath.section] {
+        case .Overdue:
+            if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
+                self.remindersListViewModel.markAsComplete(reminder: reminder)
+            }
+        case .Upcoming:
+            if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
+                self.remindersListViewModel.markAsComplete(reminder: reminder)
+            }
+        }
+        self.fetchReminders()
+    }
+    
 }
 
 // MARK: - Handling Image Picker Selection
