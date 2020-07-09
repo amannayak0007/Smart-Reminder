@@ -160,12 +160,12 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
     
     private func showImagePickerSheet() {
         // Show options for the source picker only if the camera is available.
-        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            presentPhotoPicker(sourceType: .photoLibrary)
-            return
-        }
+//        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+//            presentPhotoPicker(sourceType: .photoLibrary)
+//            return
+//        }
         
-        let photoSourcePicker = UIAlertController(title: "Smart Reminder", message: "Smart reminder uses photo to create reminders. Please provide a photo to proceed.", preferredStyle: .actionSheet)
+        let photoSourcePicker = UIAlertController(title: "Create Reminder", message: "Smart reminder uses photo to create reminders. Please provide a photo to proceed.", preferredStyle: .actionSheet)
         let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { [unowned self] _ in
             self.presentPhotoPicker(sourceType: .camera)
         }
@@ -176,7 +176,11 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
         photoSourcePicker.addAction(takePhoto)
         photoSourcePicker.addAction(choosePhoto)
         photoSourcePicker.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
+        if let popoverController = photoSourcePicker.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         present(photoSourcePicker, animated: true)
     }
     
