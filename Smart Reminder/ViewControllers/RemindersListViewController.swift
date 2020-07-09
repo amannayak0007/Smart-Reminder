@@ -8,13 +8,18 @@
 
 import UIKit
 
+enum ReminderListSectionType: String {
+    case Overdue = "Overdue"
+    case Upcoming = "Upcoming"
+}
+
 class RemindersListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var addReminderButton: UIButton!
     @IBOutlet private weak var emptyReminderView: UIView!
     
-    private let sectionTitle = ["Overdue", "Upcoming"]
+    private let sections: [ReminderListSectionType] = [.Overdue, .Upcoming]
     private let remindersListViewModel = RemindersListViewModel()
 
     override func viewDidLoad() {
@@ -35,7 +40,7 @@ class RemindersListViewController: UIViewController {
     
     @objc private func fetchReminders() {
         remindersListViewModel.fetchReminders {
-            if remindersListViewModel.dueReminders?.count == 0, remindersListViewModel.upcomingReminders?.count == 0 {
+            if remindersListViewModel.dueRemindersCount() == 0, remindersListViewModel.upcomingRemindersCount() == 0 {
                 tableView.backgroundView = emptyReminderView
             } else {
                 tableView.backgroundView = nil
@@ -82,26 +87,28 @@ class RemindersListViewController: UIViewController {
 extension RemindersListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if remindersListViewModel.dueReminders?.count == 0, remindersListViewModel.upcomingReminders?.count == 0 {
+        if remindersListViewModel.dueRemindersCount() == 0, remindersListViewModel.upcomingRemindersCount() == 0 {
             return 0
         }
-        return sectionTitle.count
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return remindersListViewModel.dueReminders?.count ?? 0
-        } else {
-            return remindersListViewModel.upcomingReminders?.count ?? 0
+        switch sections[section] {
+        case .Overdue:
+            return remindersListViewModel.dueRemindersCount()
+        case .Upcoming:
+            return remindersListViewModel.upcomingRemindersCount()
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(ReminderTableViewCell.self)", for: indexPath) as! ReminderTableViewCell
-        if indexPath.section == 0 {
+        switch sections[indexPath.section] {
+        case .Overdue:
             let reminder = remindersListViewModel.dueReminders?[indexPath.row]
             cell.configureCell(for: reminder)
-        } else {
+        case .Upcoming:
             let reminder = remindersListViewModel.upcomingReminders?[indexPath.row]
             cell.configureCell(for: reminder)
         }
@@ -117,26 +124,29 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return remindersListViewModel.dueReminders?.count == 0 ? nil : sectionTitle[section]
-        } else {
-            return remindersListViewModel.upcomingReminders?.count == 0 ? nil : sectionTitle[section]
+        switch sections[section] {
+        case .Overdue:
+            return remindersListViewModel.dueRemindersCount() == 0 ? nil : sections[section].rawValue
+        case .Upcoming:
+            return remindersListViewModel.upcomingRemindersCount() == 0 ? nil : sections[section].rawValue
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return remindersListViewModel.dueReminders?.count == 0 ? .leastNonzeroMagnitude : 40
-        } else {
-            return remindersListViewModel.upcomingReminders?.count == 0 ? .leastNonzeroMagnitude : 40
+        switch sections[section] {
+        case .Overdue:
+            return remindersListViewModel.dueRemindersCount() == 0 ? .leastNonzeroMagnitude : 40
+        case .Upcoming:
+            return remindersListViewModel.upcomingRemindersCount() == 0 ? .leastNonzeroMagnitude : 40
         }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return remindersListViewModel.dueReminders?.count == 0 ? .leastNonzeroMagnitude : 18
-        } else {
-            return remindersListViewModel.upcomingReminders?.count == 0 ? .leastNonzeroMagnitude : 18
+        switch sections[section] {
+        case .Overdue:
+            return remindersListViewModel.dueRemindersCount() == 0 ? .leastNonzeroMagnitude : 18
+        case .Upcoming:
+            return remindersListViewModel.upcomingRemindersCount() == 0 ? .leastNonzeroMagnitude : 18
         }
     }
     
@@ -149,11 +159,12 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, success) in
             guard let self = self else {return}
             print("deleted")
-            if indexPath.section == 0 {
+            switch self.sections[indexPath.section] {
+            case .Overdue:
                 if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
                     self.remindersListViewModel.delete(reminder: reminder)
                 }
-            } else {
+            case .Upcoming:
                 if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
                     self.remindersListViewModel.delete(reminder: reminder)
                 }
@@ -165,11 +176,12 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
         let completedAction = UIContextualAction(style: .normal, title: "Completed") { [weak self] (action, view, success) in
             guard let self = self else {return}
             print("complete")
-            if indexPath.section == 0 {
+            switch self.sections[indexPath.section] {
+            case .Overdue:
                 if let reminder = self.remindersListViewModel.dueReminders?[indexPath.row] {
                     self.remindersListViewModel.markAsComplete(reminder: reminder)
                 }
-            } else {
+            case .Upcoming:
                 if let reminder = self.remindersListViewModel.upcomingReminders?[indexPath.row] {
                     self.remindersListViewModel.markAsComplete(reminder: reminder)
                 }

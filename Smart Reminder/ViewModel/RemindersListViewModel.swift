@@ -45,4 +45,12 @@ class RemindersListViewModel {
         LocalNotificationScheduler.invalidateNotification(for: reminder)
     }
     
+    func upcomingRemindersCount() -> Int {
+        return upcomingReminders?.count ?? 0
+    }
+    
+    func dueRemindersCount() -> Int {
+        return dueReminders?.count ?? 0
+    }
+    
 }
