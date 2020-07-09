@@ -22,17 +22,6 @@ class AddReminderTableViewCell: UITableViewCell {
     
     weak var delegate: AdddReminderCellDelegate?
     private var tasks: [String]?
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
     func configureCell(for cellType: AddReminderCellType, taskList: [String]?, delegate: AdddReminderCellDelegate) {
         DispatchQueue.main.async {

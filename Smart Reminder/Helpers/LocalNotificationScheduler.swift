@@ -25,7 +25,6 @@ struct LocalNotificationScheduler {
             let request = UNNotificationRequest(identifier: "\(reminder.objectID)", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request)
         }
-        
     }
     
     static func invalidateNotification(for reminder: Reminder) {

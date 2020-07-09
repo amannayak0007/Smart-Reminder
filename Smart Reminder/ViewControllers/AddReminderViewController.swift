@@ -17,7 +17,6 @@ class AddReminderViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var saveBtn: UIButton!
 
-    private var datePicker = UIDatePicker()
     private var remindersListViewModel = RemindersListViewModel()
     
     weak var delegate: AddReminderDelegate?
@@ -33,7 +32,6 @@ class AddReminderViewController: UIViewController {
     }
     
     private func setupView() {
-//        navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = taskCategory?.rawValue
         saveBtn.addTarget(self, action: #selector(saveBtnPressed), for: .touchUpInside)
     }
@@ -45,6 +43,8 @@ class AddReminderViewController: UIViewController {
     }
     
 }
+
+// MARK: - TableView DataSource and Delegate methods
 
 extension AddReminderViewController: UITableViewDataSource, UITableViewDelegate {
     
@@ -76,6 +76,8 @@ extension AddReminderViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
 }
+
+// MARK: - Handling Update of task title and date on value change
 
 extension AddReminderViewController: AdddReminderCellDelegate {
     

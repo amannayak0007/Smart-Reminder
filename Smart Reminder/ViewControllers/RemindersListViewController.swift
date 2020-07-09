@@ -29,13 +29,11 @@ class RemindersListViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .automatic
         tableView.tableFooterView = UIView()
         addReminderButton.addTarget(self, action: #selector(addReminderTapped), for: .touchUpInside)
-        fetchReminders()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(fetchReminders), name: UIApplication.willEnterForegroundNotification, object: nil)
-        
+        fetchReminders()
     }
     
-    @objc func fetchReminders() {
+    @objc private func fetchReminders() {
         remindersListViewModel.fetchReminders {
             if remindersListViewModel.dueReminders?.count == 0, remindersListViewModel.upcomingReminders?.count == 0 {
                 tableView.backgroundView = emptyReminderView
@@ -50,7 +48,36 @@ class RemindersListViewController: UIViewController {
         showImagePickerSheet()
     }
     
+    private func showImagePickerSheet() {
+        // Show options for the source picker only if the camera is available.
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            presentPhotoPicker(sourceType: .photoLibrary)
+            return
+        }
+        
+        let takePhotoAction = AlertActionModel(title: "Take Photo", type: .default) { [unowned self] in
+            self.presentPhotoPicker(sourceType: .camera)
+        }
+        
+        let choosePhotoAction = AlertActionModel(title: "Choose Photo", type: .default) { [unowned self] in
+            self.presentPhotoPicker(sourceType: .photoLibrary)
+        }
+        
+        let cancelAction = AlertActionModel(title: "Cancel", type: .cancel, action: nil)
+        
+        showAlertWithOptions(title: "Create Reminder", message: "Smart reminder uses photo to create reminders. Please provide a photo to proceed.", style: .actionSheet, actionModels: [takePhotoAction, choosePhotoAction, cancelAction])
+    }
+    
+    private func presentPhotoPicker(sourceType: UIImagePickerController.SourceType) {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = sourceType
+        present(picker, animated: true)
+    }
+    
 }
+
+// MARK: - TableView DataSource and Delegate methods
 
 extension RemindersListViewController: UITableViewDataSource, UITableViewDelegate {
     
@@ -156,56 +183,30 @@ extension RemindersListViewController: UITableViewDataSource, UITableViewDelegat
     }
 }
 
+// MARK: - Handling Image Picker Selection
+
 extension RemindersListViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    private func showImagePickerSheet() {
-        // Show options for the source picker only if the camera is available.
-//        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-//            presentPhotoPicker(sourceType: .photoLibrary)
-//            return
-//        }
-        
-        let photoSourcePicker = UIAlertController(title: "Create Reminder", message: "Smart reminder uses photo to create reminders. Please provide a photo to proceed.", preferredStyle: .actionSheet)
-        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { [unowned self] _ in
-            self.presentPhotoPicker(sourceType: .camera)
-        }
-        let choosePhoto = UIAlertAction(title: "Choose Photo", style: .default) { [unowned self] _ in
-            self.presentPhotoPicker(sourceType: .photoLibrary)
-        }
-        
-        photoSourcePicker.addAction(takePhoto)
-        photoSourcePicker.addAction(choosePhoto)
-        photoSourcePicker.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        if let popoverController = photoSourcePicker.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        present(photoSourcePicker, animated: true)
-    }
-    
-    private func presentPhotoPicker(sourceType: UIImagePickerController.SourceType) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        picker.sourceType = sourceType
-        present(picker, animated: true)
-    }
-    
-    // MARK: - Handling Image Picker Selection
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         let image = info[.originalImage] as! UIImage
+        classify(image)
+    }
+
+}
+
+// MARK: - Image Classifier
+
+extension RemindersListViewController {
+    
+    private func classify(_ image: UIImage) {
         let imageClassifier = SmartReminderImageClassifier()
         imageClassifier.processClassification(for: image) { [weak self] (result) in
             guard let self = self else {return}
             switch result {
             case .success(let taskCategory):
                 if let taskCategory = taskCategory {
-                    let vc =  ViewControllersFactory.addReminderViewController()
-                    vc.taskCategory = taskCategory
-                    vc.delegate = self
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    self.showAddReminderVC(taskCategory)
                 } else {
                     self.setupErrorTypeAlertView(title: "Oops!", message: "We are not able to recognize this image. Please try again.")
                 }
@@ -215,8 +216,17 @@ extension RemindersListViewController: UIImagePickerControllerDelegate, UINaviga
             }
         }
     }
-
+    
+    private func showAddReminderVC(_ taskCategory: TaskCategory) {
+        let vc =  ViewControllersFactory.addReminderViewController()
+        vc.taskCategory = taskCategory
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }
+
+// MARK: - Handling table reload on new reminder creation
 
 extension RemindersListViewController: AddReminderDelegate {
     

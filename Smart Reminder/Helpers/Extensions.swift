@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+typealias AlertActionModel = (title: String, type: UIAlertAction.Style, action: (() -> Void)?)
+
 extension UIViewController {
     
     func setupErrorTypeAlertView(title: String?,message: String?) {
@@ -16,6 +18,21 @@ extension UIViewController {
         let okAction =  UIAlertAction(title: "Ok", style: .default, handler: nil)
         alertVC.addAction(okAction)
         self.present(alertVC, animated: true, completion: nil)
+    }
+    
+    func showAlertWithOptions(title: String?,message: String?,style: UIAlertController.Style, actionModels: [AlertActionModel], animated: Bool = true, completion: (() -> Void)? = nil  ) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: style)
+        for actionMdodel in actionModels {
+            alert.addAction(UIAlertAction(title: actionMdodel.title, style: actionMdodel.type, handler: { _ in
+                actionMdodel.action?()
+            }))
+        }
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        self.present(alert, animated: animated , completion: completion)
     }
     
 }
