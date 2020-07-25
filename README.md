@@ -1,6 +1,6 @@
 # Smart Reminder
 
-![](http://cl.ly/image/241o0G1G3S36/download/springsetup.jpg)
+![](https://imgur.com/C85oJnP)
 
 Smart reminder app for iPhone/iPad.
 
