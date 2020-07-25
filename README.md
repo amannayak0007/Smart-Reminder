@@ -1,6 +1,6 @@
 # Smart Reminder
 
-![](https://ibb.co/0qj78Dd)
+<img src="https://ibb.co/0qj78Dd" alt="" />
 
 Smart reminder app for iPhone/iPad.
 
