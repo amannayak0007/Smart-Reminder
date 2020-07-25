@@ -1,6 +1,6 @@
 # Smart Reminder
 
-![](https://imgur.com/C85oJnP)
+![](https://ibb.co/0qj78Dd)
 
 Smart reminder app for iPhone/iPad.
 
